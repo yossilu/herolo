@@ -27,7 +27,6 @@ class ResultsTable extends Component {
             console.log("this.state detailed movies", this.state.detailedMovies)
         }
     }
-
     onToggleMovieModal = (movieData) => {
         if (movieData){
             this.setState({
