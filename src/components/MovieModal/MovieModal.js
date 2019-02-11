@@ -13,6 +13,8 @@ class MovieModal extends Component {
         this.onTextChange = this.onTextChange.bind(this);
         this.copyOf = this.copyOf.bind(this);
         this.onFormClose = this.onFormClose.bind(this);
+        this.checkForText = this.checkForText.bind(this);
+        this.checkForDigits = this.checkForDigits.bind(this);
         let editableMovie = this.copyOf(this.props.movieData);
         this.state = {
             movieData: this.props.movieData,
@@ -43,15 +45,61 @@ class MovieModal extends Component {
       this.props.toggleModal();
     }
 
+    checkForText = (value) => {
+      let allowedChars = " ,.?:\"'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      for (let char of value){
+        if (allowedChars.indexOf(char) === -1 && allowedChars.indexOf(char) === -1){
+          return false;
+        }
+      }
+      return true;
+    }
+    checkForDigits = (value) => {
+      let allowedDigits = '0123456789.';
+      for (let digit of String(value)){
+        if (allowedDigits.indexOf(digit) === -1){
+          return false;
+        }
+      }
+      return true;
+    }
+
     onSave = () => {
       console.log("onSAVE!",this.state.editableMovie);
+      let valid = true;
       let editableMovie = this.copyOf(this.state.editableMovie);
-      this.setState({
-        editable: false,
-        movieData: this.state.editableMovie
-      });
-      this.props.onMovieSave(editableMovie);
-      this.props.toggleModal();
+
+
+
+      for (let key in editableMovie){
+        let textVal = String(editableMovie[key]).trim();
+        if (key === 'Year' || key === 'imdbRatings'){
+          if (!this.checkForDigits(textVal)){
+            console.log("TEXT NOT VALID!!",key);
+            valid = false;
+          }
+        } 
+        else {
+          if (!this.checkForText(textVal)){
+            console.log("DIGITS NOT VALID!!",key);
+            valid = false;
+          }
+        }
+      }
+
+      if (valid){
+        this.setState({
+          editable: false,
+          movieData: this.state.editableMovie
+        });
+        this.props.onMovieSave(editableMovie);
+        this.props.toggleModal();
+      } else {
+
+        //TODO: error popup
+      }
+
+
     }
 
     onTextChange = (event, type) => {
