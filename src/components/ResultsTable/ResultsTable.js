@@ -38,8 +38,8 @@ class ResultsTable extends Component {
                 showPopup: false
           });
         }
-
     }
+
     onEditClicked = () => {
         this.setState({
         })
@@ -55,12 +55,13 @@ class ResultsTable extends Component {
         return (   
         <div className="ResultsTable">
                     { this.state.showPopup ?
-                    
-                    <MovieModal 
-                    movieData={ this.state.modalMovieData } >
+                    <MovieModal
+                    onEditSave={this.props.onEditSave} 
+                    movieData={ this.state.modalMovieData}
+                    onMovieSave={this.props.onMovieSave}>
                     </MovieModal>
-            
                     : null }
+
                     <Container>
                             {moviesTable}
                     </Container>

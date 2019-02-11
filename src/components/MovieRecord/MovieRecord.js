@@ -22,7 +22,6 @@ class MovieRecord extends Component {
     }
 
     render() {
-            console.log(this.state);
         return (
                 <div>
                         <Row className="movieRecord text-body bg single-record" >
