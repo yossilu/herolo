@@ -3,6 +3,7 @@ import './ResultsTable.css';
 import Container from 'react-bootstrap/Container';
 import MovieRecord from '../MovieRecord/MovieRecord';
 import MovieModal from '../MovieModal/MovieModal';
+import Modal from 'react-bootstrap/Modal';
 
 class ResultsTable extends Component {
 
@@ -19,12 +20,13 @@ class ResultsTable extends Component {
          
     }
     componentDidUpdate = () => {
-        if (this.props.sharedMovies.length !== 0 && !this.state.moviesUpdated){
+        console.log("I FUCKED YOU!!@#!@#");
+        if (this.props.sharedMovies.length !== 0 && (!this.state.moviesUpdated || this.state.detailedMovies !== this.props.sharedMovies)){
+            console.log("HI!",this.props.sharedMovies);
             this.setState({
                 detailedMovies: this.props.sharedMovies,
                 moviesUpdated: true
             });
-            console.log("this.state detailed movies", this.state.detailedMovies)
         }
     }
     onToggleMovieModal = (movieData) => {
@@ -46,6 +48,7 @@ class ResultsTable extends Component {
     }
 
     render() {
+        console.log("Results Table RENDER:",this.state.detailedMovies);
        let moviesTable = this.state.detailedMovies.map((res, i) => {
              return <MovieRecord 
              onToggleMovieModal={this.onToggleMovieModal}
@@ -54,13 +57,18 @@ class ResultsTable extends Component {
         }); 
         return (   
         <div className="ResultsTable">
-                    { this.state.showPopup ?
-                    <MovieModal
-                    onEditSave={this.props.onEditSave} 
-                    movieData={ this.state.modalMovieData}
-                    onMovieSave={this.props.onMovieSave}>
-                    </MovieModal>
-                    : null }
+                    <Modal show={this.state.showPopup} onHide={this.onToggleMovieModal}>
+                        <Modal.Header closeButton>
+                            <Modal.Title id="contained-modal-title-vcenter">Movie Details</Modal.Title>
+                        </Modal.Header>
+                        <MovieModal
+                        onModalSaveResultsTable={this.onModalSaveResultsTable}
+                        onEditSave={this.props.onEditSave} 
+                        movieData={ this.state.modalMovieData}
+                        onMovieSave={this.props.onMovieSave}
+                        toggleModal={this.onToggleMovieModal}>
+                        </MovieModal>
+                    </Modal>
 
                     <Container>
                             {moviesTable}

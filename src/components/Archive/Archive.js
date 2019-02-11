@@ -17,7 +17,7 @@ class Archive extends Component {
         this.getMovie = this.getMovie.bind(this);
         this.onSearchChanged = this.onSearchChanged.bind(this);
         this.onSearchClicked = this.onSearchClicked.bind(this);
-        this.modalBtnAdd = this.modalBtnAdd.bind(this);
+        this.toggleModal = this.toggleModal.bind(this);
         this.checkIfTitleExists = this.checkIfTitleExists.bind(this);
         this.saveNewMovie = this.saveNewMovie.bind(this);
         this.state = {
@@ -82,16 +82,8 @@ class Archive extends Component {
           return movieData;
         }
         return res;
-        // console.log(res.Title, movieData.Title)
-        // if(this.checkIfTitleExists(res, movieData)){
-        //   movies[index] = movieData;
-        //   this.setState({
-        //      sharedMovies: movies
-        //   })
-          
-        // }
-      })
-
+      });
+      console.log("on movie save",movies);
       this.setState({
         sharedMovies: movies
       })
@@ -108,15 +100,9 @@ class Archive extends Component {
       return true;
     }
 
-    modalBtnAdd = () => {
+    toggleModal = () => {
       this.setState({
-        modalShow: true
-      })
-    }
-
-    onAddModalClose = () =>{
-      this.setState({
-        modalShow: false
+        modalShow: !this.state.modalShow
       })
     }
 
@@ -126,21 +112,21 @@ class Archive extends Component {
 
 
     render() {
-      console.log("RENDER!");
-      console.log("editing works",this.state.sharedMovies)
+      
+      console.log("archive render",this.state.sharedMovies);
         return (
         <div className="Archive">
           <Navbar bg="dark" variant="dark">
             <Navbar.Brand>Herolo</Navbar.Brand>
             <Nav className="mr-auto">
-              <Nav.Link href="#adding new movies" onClick={this.modalBtnAdd}>Add a Movie</Nav.Link>
+              <Nav.Link href="#adding new movies" onClick={this.toggleModal}>Add a Movie</Nav.Link>
             </Nav>
             <Form inline>
               <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={this.onSearchChanged}/>
-              <Button variant="outline-info" onClick={this.onSearchClicked} onEditSave={this.onMovieEditSave}> Search</Button>
+              <Button variant="outline-info" onClick={this.onSearchClicked}> Search</Button>
             </Form>
            </Navbar>
-           <Modal show={this.state.modalShow} onHide={this.onAddModalClose}>
+           <Modal show={this.state.modalShow} onHide={this.toggleModal}>
                 <Modal.Header closeButton>
                   <Modal.Title id="contained-modal-title-vcenter">Add a movie to our library</Modal.Title>
                 </Modal.Header>
