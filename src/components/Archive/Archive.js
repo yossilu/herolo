@@ -49,7 +49,7 @@ componentWillUpdate = () => {
     getMovie = async (movieRecord) => {
       const apikey = 'c405b8b8';
       const searchMoviesUrl = `?plot=full&type=movie&apikey=${apikey}&t=${movieRecord.Title}`
-      const baseUrl = 'http://www.omdbapi.com/';
+      const baseUrl = 'https://www.omdbapi.com/';
       return axios({
         url: searchMoviesUrl,
         baseURL: baseUrl,
@@ -61,7 +61,7 @@ componentWillUpdate = () => {
     searchMovies = async (keywords) => {
         const apikey = 'c405b8b8';
         const searchMoviesUrl = `?type=movie&apikey=${apikey}&s=${keywords}`;
-        const baseUrl = 'http://www.omdbapi.com/';
+        const baseUrl = 'https://www.omdbapi.com/';
         return axios({
           url: searchMoviesUrl,
           baseURL: baseUrl,
