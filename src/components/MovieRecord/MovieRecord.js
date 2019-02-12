@@ -12,27 +12,36 @@ class MovieRecord extends Component {
         this.onToggleMovieModal = this.onToggleMovieModal.bind(this);
         this.state = {
                 movieData: this.props.movieData,
-                showPopup: false
+                showPopup: false,
+                movieModal: this.props.modalMovieData,
+                movieDataBool: false
           };   
     }
 
+
     onToggleMovieModal = () => {
-            console.log(this.props);
-            this.props.onToggleMovieModal(this.state.movieData);
+        let moviedata = this.state.movieData;
+        this.setState({
+                movieData: moviedata
+        })
+        this.props.onToggleMovieModal(this.state.movieData);
     }
+
+    
+    
 
     render() {
         return (
                 <div>
-                        <Row className="movieRecord text-body bg single-record" >
-                                <Col className="movieRecordDetails">
-                                        <Image src={this.state.movieData.Poster} className="movie-record-image"/>
+                        <Row className="movieRecord text-body bg single-record block-example border border-dark" >
+                                <Col className="movieRecordDetails" style={{padding: "20px"}}>
+                                        <Image src={this.props.movieData.Poster} className="movie-record-image"/>
                                 </Col>
                                 <Col className="movieRecordDetails">
-                                        {this.state.movieData.Title}
+                                        {this.props.movieData.Title}
                                 </Col>     
                                 <Col className="movieRecordDetails">
-                                        ({this.state.movieData.Year})
+                                        ({this.props.movieData.Year})
                                 </Col>  
                                 <Col className="movieRecordDetails">
                                 <Button className="edit-button"  variant="dark" onClick={this.onToggleMovieModal}> Details</Button>

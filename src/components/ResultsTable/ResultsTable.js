@@ -10,50 +10,59 @@ class ResultsTable extends Component {
     constructor(props) {
         super(props);
         this.onToggleMovieModal = this.onToggleMovieModal.bind(this);
-        this.onEditClicked = this.onEditClicked.bind(this);
         this.state = {
-            detailedMovies: [],
+            detailedMovies: this.props.sharedMovies,
             moviesUpdated: false,
             modalMovieData: {},
             showPopup: false
           };
-         
     }
+
+
+    
     componentDidUpdate = () => {
-        console.log("I FUCKED YOU!!@#!@#");
-        if (this.props.sharedMovies.length !== 0 && (!this.state.moviesUpdated || this.state.detailedMovies !== this.props.sharedMovies)){
-            console.log("HI!",this.props.sharedMovies);
+    
+        if (!this.state.moviesUpdated && this.props.sharedMovies.length !== 0 && this.state.detailedMovies.length === 0){
+           
             this.setState({
                 detailedMovies: this.props.sharedMovies,
-                moviesUpdated: true
+                moviesUpdated: !this.state.moviesUpdated
             });
+        } else {
+            if(this.props.sharedMovies.length !== 0 && this.state.detailedMovies.length !== 0){
+                if(this.state.detailedMovies[0].imdbID !== this.props.sharedMovies[0].imdbID){
+                    this.setState({
+                        detailedMovies: this.props.sharedMovies,
+                        moviesUpdated: !this.state.moviesUpdated
+                    });
+                }
+            }
+            
         }
     }
+
     onToggleMovieModal = (movieData) => {
         if (movieData){
             this.setState({
                 modalMovieData: movieData,
-                showPopup: true
+                showPopup: !this.state.showPopup
           });
         } else {
             this.setState({
-                showPopup: false
-          });
-        }
-    }
-
-    onEditClicked = () => {
-        this.setState({
-        })
+                showPopup: !this.state.showPopup
+            })
+        } 
+        
     }
 
     render() {
-        console.log("Results Table RENDER:",this.state.detailedMovies);
        let moviesTable = this.state.detailedMovies.map((res, i) => {
              return <MovieRecord 
              onToggleMovieModal={this.onToggleMovieModal}
-             movieData={res} 
+             movieData={res}
+             modalMovieData= {this.modalMovieData} 
              key={i}></MovieRecord>
+             
         }); 
         return (   
         <div className="ResultsTable">
@@ -62,11 +71,9 @@ class ResultsTable extends Component {
                             <Modal.Title id="contained-modal-title-vcenter">Movie Details</Modal.Title>
                         </Modal.Header>
                         <MovieModal
-                        onModalSaveResultsTable={this.onModalSaveResultsTable}
-                        onEditSave={this.props.onEditSave} 
-                        movieData={ this.state.modalMovieData}
-                        onMovieSave={this.props.onMovieSave}
-                        toggleModal={this.onToggleMovieModal}>
+                            movieData={ this.state.modalMovieData}
+                            onMovieSave={this.props.onMovieSave}
+                            toggleModal={this.onToggleMovieModal}>
                         </MovieModal>
                     </Modal>
 

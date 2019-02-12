@@ -3,6 +3,8 @@ import './MovieModal.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import { confirmAlert } from 'react-confirm-alert'; 
+import 'react-confirm-alert/src/react-confirm-alert.css' 
 
 class MovieModal extends Component {
 
@@ -13,13 +15,13 @@ class MovieModal extends Component {
         this.onTextChange = this.onTextChange.bind(this);
         this.copyOf = this.copyOf.bind(this);
         this.onFormClose = this.onFormClose.bind(this);
-        this.checkForText = this.checkForText.bind(this);
         this.checkForDigits = this.checkForDigits.bind(this);
         let editableMovie = this.copyOf(this.props.movieData);
         this.state = {
             movieData: this.props.movieData,
             editable: false,
-            editableMovie: editableMovie
+            editableMovie: editableMovie,
+            cantEditMsg: "You Can't Edit A Movie With A Title"
           };   
     }
     copyOf = (object) => {
@@ -29,77 +31,79 @@ class MovieModal extends Component {
       }
       return copy;
     }
-    componentDidUpdate=()=>{
 
-    }
     onEditToggle=()=>{
-      console.log()
       let editableMovie = this.copyOf(this.state.movieData);
+      if(editableMovie.Title.length === 0){
       this.setState({
         editable: !this.state.editable,
         editableMovie: editableMovie
       });
+     }
+      else
+     {
+      confirmAlert({
+        title: 'Oops something went wrong....',
+        message: this.state.cantEditMsg,
+        buttons: [
+          {
+            label: 'X'
+          }
+        ]
+          
+      })
+      this.onFormClose();
+     }
     }
 
     onFormClose = () => {
-      this.props.toggleModal();
+      this.props.toggleModal(this.state.editableMovie);
     }
 
-    checkForText = (value) => {
-      let allowedChars = " ,.?:\"'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-      for (let char of value){
-        if (allowedChars.indexOf(char) === -1 && allowedChars.indexOf(char) === -1){
-          return false;
-        }
-      }
-      return true;
-    }
+    // checkForText = (value) => {
+    //   let allowedChars = " ,.?:\"'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    //   for (let char of value){
+    //     if (allowedChars.indexOf(char) === -1 && allowedChars.indexOf(char) === -1){
+    //       return false;
+    //     }
+    //   }
+    //   return true;
+    // }
     checkForDigits = (value) => {
-      let allowedDigits = '0123456789.';
+      let check = false;
+      let allowedDigits = '0123456789';
       for (let digit of String(value)){
-        if (allowedDigits.indexOf(digit) === -1){
-          return false;
+        if (allowedDigits[digit] === digit){
+          check = true;
         }
       }
-      return true;
+      return check;
     }
 
     onSave = () => {
-      console.log("onSAVE!",this.state.editableMovie);
       let valid = true;
       let editableMovie = this.copyOf(this.state.editableMovie);
-
-
-
       for (let key in editableMovie){
-        let textVal = String(editableMovie[key]).trim();
-        if (key === 'Year' || key === 'imdbRatings'){
-          if (!this.checkForDigits(textVal)){
-            console.log("TEXT NOT VALID!!",key);
+        let textVal = editableMovie[key];
+        if (key === 'Year'){
+          if (this.checkForDigits(textVal)){
             valid = false;
           }
         } 
-        else {
-          if (!this.checkForText(textVal)){
-            console.log("DIGITS NOT VALID!!",key);
-            valid = false;
-          }
-        }
       }
-
-      if (valid){
+      if (!valid){
         this.setState({
           editable: false,
           movieData: this.state.editableMovie
         });
         this.props.onMovieSave(editableMovie);
-        this.props.toggleModal();
+        this.props.toggleModal(editableMovie);
       } else {
 
         //TODO: error popup
       }
 
-
+      
     }
 
     onTextChange = (event, type) => {
@@ -112,8 +116,6 @@ class MovieModal extends Component {
 
 
   render() {
-    console.log("RENDER");
-    console.log("RENDER",this.state.movieData);
     return (
       <div>
         <Modal.Body>
@@ -122,7 +124,7 @@ class MovieModal extends Component {
               <Form.Label>Title:</Form.Label>
               <Form.Control type="string" value={this.state.editableMovie.Title} onChange={event => this.onTextChange(event, "Title")} readOnly={!this.state.editable}/>
               <Form.Label>Year:</Form.Label>
-              <Form.Control type="string" value={this.state.editableMovie.Year} onChange={event => this.onTextChange(event, "Year")} readOnly={!this.state.editable}/>
+              <Form.Control type="number" value={this.state.editableMovie.Year} onChange={event => this.onTextChange(event, "Year")} readOnly={!this.state.editable}/>
               <Form.Label>Genre:</Form.Label> 
               <Form.Control type="string" value={this.state.editableMovie.Genre} onChange={event => this.onTextChange(event, "Genre")}  readOnly={ !this.state.editable}/>
               <Form.Label>Runtime:</Form.Label>
@@ -130,7 +132,7 @@ class MovieModal extends Component {
               <Form.Label>Director:</Form.Label> 
               <Form.Control type="string" value={this.state.editableMovie.Director} onChange={event => this.onTextChange(event, "Director")} readOnly={ !this.state.editable}/>
               <Form.Label>Plot:</Form.Label> 
-              <Form.Control type="string" value={this.state.editableMovie.Plot} onChange={event => this.onTextChange(event, "Plot")} readOnly={ !this.state.editable}/>
+              <Form.Control type="string" as="textarea" rows="4" value={this.state.editableMovie.Plot} onChange={event => this.onTextChange(event, "Plot")} readOnly={ !this.state.editable}/>
               <Form.Label>IMDB Rating:</Form.Label>
               <Form.Control type="number" value={this.state.editableMovie.imdbRating} onChange={event => this.onTextChange(event, "imdbRating")} readOnly={ !this.state.editable}/>
               <Form.Label>Actors:</Form.Label>
@@ -146,7 +148,6 @@ class MovieModal extends Component {
                     <Button className="edit-button"  variant="dark" onClick={this.onEditToggle}> Cancel</Button>
                   </div>
                   : <Button className="edit-button"  variant="dark" onClick={this.onEditToggle}> Edit</Button>
-                    
                 }
           </Modal.Footer>
         </div>
