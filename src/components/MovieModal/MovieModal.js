@@ -34,6 +34,30 @@ class MovieModal extends Component {
 
     onEditToggle=()=>{
       let editableMovie = this.copyOf(this.state.movieData);
+      if(editableMovie.Title.length !== 0){
+      this.setState({
+        editable: !this.state.editable,
+        editableMovie: editableMovie
+      });
+     }
+      else
+     {
+      confirmAlert({
+        title: 'Oops something went wrong....',
+        message: this.state.cantEditMsg,
+        buttons: [
+          {
+            label: 'X'
+          }
+        ]
+          
+      })
+      this.onFormClose();
+     }
+    }
+
+    onEditToggle2=()=>{
+      let editableMovie = this.copyOf(this.state.movieData);
       if(editableMovie.Title.length === 0){
       this.setState({
         editable: !this.state.editable,
@@ -56,19 +80,37 @@ class MovieModal extends Component {
      }
     }
 
+    onEditToggle=()=>{
+      let editableMovie = this.copyOf(this.state.movieData);
+      if(editableMovie.Title.length !== 0){
+      this.setState({
+        editable: !this.state.editable,
+        editableMovie: editableMovie
+      });
+     }
+      else
+     {
+      confirmAlert({
+        title: 'Oops something went wrong....',
+        message: this.state.cantEditMsg,
+        buttons: [
+          {
+            label: 'X'
+          }
+        ]
+          
+      })
+      this.onFormClose();
+     }
+    }
+
+     
+
     onFormClose = () => {
       this.props.toggleModal(this.state.editableMovie);
     }
+    
 
-    // checkForText = (value) => {
-    //   let allowedChars = " ,.?:\"'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    //   for (let char of value){
-    //     if (allowedChars.indexOf(char) === -1 && allowedChars.indexOf(char) === -1){
-    //       return false;
-    //     }
-    //   }
-    //   return true;
-    // }
     checkForDigits = (value) => {
       let check = false;
       let allowedDigits = '0123456789';
@@ -96,6 +138,7 @@ class MovieModal extends Component {
           editable: false,
           movieData: this.state.editableMovie
         });
+        console.log(this.state.editableMovie)
         this.props.onMovieSave(editableMovie);
         this.props.toggleModal(editableMovie);
       } else {
@@ -109,6 +152,7 @@ class MovieModal extends Component {
     onTextChange = (event, type) => {
       let editableMovie = this.state.editableMovie;
       editableMovie[type] = event.target.value;
+      console.log(editableMovie)
       this.setState({
         editableMovie: editableMovie
       })
@@ -147,7 +191,9 @@ class MovieModal extends Component {
                     <Button className="edit-button"  variant="dark" onClick={this.onSave}> Save</Button>
                     <Button className="edit-button"  variant="dark" onClick={this.onEditToggle}> Cancel</Button>
                   </div>
-                  : <Button className="edit-button"  variant="dark" onClick={this.onEditToggle}> Edit</Button>
+                  : <div><Button className="edit-button"  variant="dark" onClick={this.onEditToggle}> Edit Check</Button>
+                         <Button className="edit-button"  variant="dark" onClick={this.onEditToggle2}> Edit </Button>
+                         </div>
                 }
           </Modal.Footer>
         </div>

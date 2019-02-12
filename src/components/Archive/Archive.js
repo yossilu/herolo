@@ -123,9 +123,15 @@ componentWillUpdate = () => {
     }
 
     onMovieSave = (movieData) => {
+      console.log(movieData)
       let movies = this.state.sharedMovies;
-      movies = movies.map((res) => {
+      console.log(movies)
+      movies = movies.map((res,i) => {
         if(res.imdbID === movieData.imdbID){
+          movies[i] = movieData;
+          this.setState({
+            sharedMovies:movies
+          })
           return movieData;
         }
         return res;
