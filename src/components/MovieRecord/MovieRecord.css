@@ -1,8 +1,12 @@
 
 
 .movieRecord{
-  cursor: pointer;
   text-align: center;
+}
+
+.edit-button{
+  cursor: pointer;
+  background-color: lightsteelblue;
 }
 .movieRecordDetails{
 margin:auto;
@@ -16,9 +20,4 @@ font-weight: bold;
 }
 .title {
 color:blue;
-}
-
-.movieRecord :hover{
-background-color: rgb(63, 131, 151);
-
 }
