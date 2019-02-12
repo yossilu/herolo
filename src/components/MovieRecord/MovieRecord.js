@@ -43,7 +43,7 @@ class MovieRecord extends Component {
                                 <Col className="movieRecordDetails">
                                         ({this.props.movieData.Year})
                                 </Col>  
-                                <Col className="movieRecordDetails">
+                                <Col className="movieRecordDetailsBtn">
                                 <Button className="edit-button"  variant="dark" onClick={this.onToggleMovieModal}> Details</Button>
                                 </Col>
                                
